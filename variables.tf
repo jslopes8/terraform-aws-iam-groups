@@ -1,19 +1,16 @@
 ## Variables
-variable "policy_name" {
-    type    = string
+variable "create" {
+    type    = bool
+    default = true
 }
 variable "iam_group_name" {
-    default = string
-}
-variable "iam_policy_mq" {
-    default = []
-}
-variable "iam_policy_read" {
-    default = []
-}
-variable "resources" {
-    default = []
-}
-variable "effect" {
     type    = string
+}
+variable "import_managed_policies" {
+    type    = any
+    default = []
+}
+variable "iam_policy" {
+    type    = any
+    default = []
 }
