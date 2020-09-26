@@ -14,3 +14,7 @@ variable "iam_policy" {
     type    = any
     default = []
 }
+variable "path" {
+    type = string
+    default = "/"
+}
