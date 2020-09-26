@@ -4,7 +4,7 @@ resource "aws_iam_group" "main" {
     name    = var.iam_group_name
     path    = var.path
 }
-resource "aws_iam_group_policy_attachment" "main" {
+resource "aws_iam_group_policy_attachment" "import_managed" {
     count   = var.create ? length(var.import_managed_policies) : 0
 
     group      = aws_iam_group.admin[0].name
