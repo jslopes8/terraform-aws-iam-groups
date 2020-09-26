@@ -18,3 +18,6 @@ variable "path" {
     type = string
     default = "/"
 }
+variable "name_policy" {
+    type = string
+}
