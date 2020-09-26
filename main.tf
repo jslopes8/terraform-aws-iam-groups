@@ -7,13 +7,13 @@ resource "aws_iam_group" "main" {
 resource "aws_iam_group_policy_attachment" "import_managed" {
     count   = var.create ? length(var.import_managed_policies) : 0
 
-    group      = aws_iam_group.admin[0].name
+    group      = aws_iam_group.main.0.name
     policy_arn = lookup(var.import_managed_policies[count.index], "policies_arn", null)
 }
 resource "aws_iam_group_policy_attachment" "main" {
     count   = var.create ? length(var.iam_policy) : 0
 
-    group      = aws_iam_group.admin[0].name
+    group      = aws_iam_group.main.0.name
     policy_arn = data.aws_iam_policy_document.policy_document.json
 }
 data "aws_iam_policy_document" "policy_document" {
