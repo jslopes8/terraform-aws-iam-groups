@@ -14,7 +14,14 @@ resource "aws_iam_group_policy_attachment" "main" {
     count   = var.create ? length(var.iam_policy) : 0
 
     group      = aws_iam_group.main.0.name
-    policy_arn = data.aws_iam_policy_document.policy_document.json
+    policy_arn = aws_iam_policy.main.0.arn
+}
+resource "aws_iam_policy" "main" {
+    count   = var.create ? length(var.iam_policy) : 0
+
+    name = var.name_policy
+    path = "/"
+    policy = data.aws_iam_policy_document.policy_document.json
 }
 data "aws_iam_policy_document" "policy_document" {
     dynamic "statement" {
