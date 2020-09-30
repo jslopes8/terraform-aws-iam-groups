@@ -14,43 +14,23 @@ resource "aws_iam_group_policy_attachment" "main" {
     count   = var.create ? length(var.iam_policy) : 0
 
     group      = aws_iam_group.main.0.name
-    policy_arn = aws_iam_policy.main.0.arn
+    policy_arn = element(aws_iam_policy.main.*.arn, count.index)
 }
 resource "aws_iam_policy" "main" {
     count   = var.create ? length(var.iam_policy) : 0
 
-    name = var.name_policy
+    name = lookup(var.iam_policy[count.index], "name_policy", null)
     path = "/"
-    policy = data.aws_iam_policy_document.policy_document.json
+    policy = element(data.aws_iam_policy_document.policy_document.*.json, count.index)
 }
 data "aws_iam_policy_document" "policy_document" {
-    dynamic "statement" {
-        for_each = var.iam_policy
-        
-        content {
-            sid         = lookup(statement.value, "sid", null)
-            effect      = lookup(statement.value, "effect", null)
-            actions     = lookup(statement.value, "actions", null)
-            not_actions = lookup(statement.value, "not_actions", null)
-            resources   = lookup(statement.value, "resources", null)
+    count   = var.create ? length(var.iam_policy) : 0
 
-        dynamic "condition" {
-          for_each = length(keys(lookup(statement.value, "condition", {}))) == 0 ? [] : [lookup(statement.value, "condition", {})]
-          content {
-            test      = lookup(condition.value, "test", null)
-            variable  = lookup(condition.value, "variable", null)
-            values    = lookup(condition.value, "values", null)
-            
-          }
-        }
-
-        dynamic "principals" {
-          for_each = length(keys(lookup(statement.value, "principals", {}))) == 0 ? [] : [lookup(statement.value, "principals", {})]
-          content {
-            type        = lookup(principals.value, "type", null)
-            identifiers = lookup(principals.value, "identifiers", null)
-          }
-        }
-      }
+    statement {
+        sid         = lookup(var.iam_policy[count.index], "sid", null)
+        effect      = lookup(var.iam_policy[count.index], "effect", null)
+        actions     = lookup(var.iam_policy[count.index], "actions", null)
+        not_actions = lookup(var.iam_policy[count.index], "not_actions", null)
+        resources   = lookup(var.iam_policy[count.index], "resources", null)
     }
 }
